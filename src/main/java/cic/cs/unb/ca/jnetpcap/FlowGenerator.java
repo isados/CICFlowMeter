@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
+import org.jnetpcap.packet.format.FormatUtils;
 
 import static cic.cs.unb.ca.jnetpcap.Utils.LINE_SEP;
 
@@ -125,8 +126,19 @@ public class FlowGenerator {
     			flow.addPacket(packet);
     			currentFlows.put(id,flow);
     		}
-    	}else{
-			currentFlows.put(packet.fwdFlowId(), new BasicFlow(bidirectional,packet, this.flowActivityTimeOut));
+    	}else{		
+		String filterip = "216.58.207.99";
+		String src_ip = "";
+		String dst_ip = "";
+		 if (packet != null)
+		{ 	
+			src_ip = FormatUtils.ip(packet.getSrc());
+			dst_ip = FormatUtils.ip(packet.getDst());
+			if (filterip.equals(src_ip) || filterip.equals(dst_ip))
+				System.out.println(src_ip + " " +  dst_ip);
+			else
+				currentFlows.put(packet.fwdFlowId(), new BasicFlow(bidirectional,packet, this.flowActivityTimeOut));
+		}
     	}
     }
 
